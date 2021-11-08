@@ -1,5 +1,12 @@
-# Lab 2
+### SOFE 4640 - Mobile App Dev
+--------------------------
+### Lab Group #13
 
-## Ontario tech university
-## Mobile application course
-## Lab2: Create a database to store notes permanenetly
+Cassidy Linhares
+
+Cristina Chung
+
+Fazal Rahman
+
+Tegveer Singh
+
