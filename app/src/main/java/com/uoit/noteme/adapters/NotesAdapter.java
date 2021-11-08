@@ -1,5 +1,6 @@
 package com.uoit.noteme.adapters;
 
+import android.annotation.SuppressLint;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.uoit.noteme.R;
 import com.uoit.noteme.entities.Note;
+import com.uoit.noteme.listeners.NotesListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +31,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     private List<Note> notes;
     private Timer timer;
     private List<Note> notesSource;
+    private NotesListener notesListener;
 
-    public NotesAdapter(List<Note> notes) {
+    public NotesAdapter(List<Note> notes, NotesListener notesListener) {
         this.notes = notes;
         notesSource = notes;
+        this.notesListener = notesListener;
     }
 
     @NonNull
@@ -45,8 +49,14 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NoteViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull NoteViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.setNote(notes.get(position));
+        holder.layoutNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                notesListener.onNoteClicked(notes.get(position), position);
+            }
+        });
     }
 
     @Override

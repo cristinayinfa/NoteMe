@@ -103,7 +103,7 @@
 
             <View
                 android:id="@+id/viewSubtitleIndicator"
-                android:layout_width="@dimen/_1sdp"
+                android:layout_width="@dimen/_5sdp"
                 android:layout_height="0dp"
                 android:layout_marginStart="@dimen/_12sdp"
                 android:background="@drawable/background_subtitle_indicator"
