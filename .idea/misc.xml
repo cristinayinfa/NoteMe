@@ -3,7 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/cass4/AndroidStudioProjects/NoteMe/app/src/main/res/drawable/background_search.xml" value="0.19583333333333333" />
+        <entry key="..\:/Users/cass4/AndroidStudioProjects/NoteMe/app/src/main/res/drawable/ic_add.xml" value="0.19583333333333333" />
+        <entry key="..\:/Users/cass4/AndroidStudioProjects/NoteMe/app/src/main/res/drawable/ic_delete.xml" value="0.19583333333333333" />
         <entry key="..\:/Users/cass4/AndroidStudioProjects/NoteMe/app/src/main/res/layout/activity_create_note.xml" value="0.1796875" />
+        <entry key="..\:/Users/cass4/AndroidStudioProjects/NoteMe/app/src/main/res/layout/layout_colour.xml" value="0.22" />
+        <entry key="..\:/Users/cass4/AndroidStudioProjects/NoteMe/app/src/main/res/layout/layout_delete_note.xml" value="0.1" />
       </map>
     </option>
   </component>

@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">NoteMe</string>
     <string name="add_image">Add image</string>
+    <string name="delete_note">Delete Note</string>
+    <string name="cancel_delete_note">Cancel</string>
+    <string name="delete_note_confirmation">Are you sure you want to delete?</string>
 </resources>
