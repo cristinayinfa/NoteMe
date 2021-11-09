@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
     private List<Note> noteList;
     private NotesAdapter notesAdapter;
 
-    private int noteClickedPosition = -1;
+    private int clicked_note_index = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,14 +80,14 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
 
     @Override
     public void onNoteClicked(Note note, int position) {
-        noteClickedPosition = position;
-        Intent intent = new Intent(getApplicationContext(), CreateNoteActivity.class);
-        intent.putExtra("isViewOrUpdate", true);
-        intent.putExtra("note", note);
-        startActivityForResult(intent, REQUEST_CODE_UPDATE_NOTE);
+        clicked_note_index = position;
+        Intent note_update_intent = new Intent(getApplicationContext(), CreateNoteActivity.class);
+        note_update_intent.putExtra("isViewOrUpdate", true);
+        note_update_intent.putExtra("note", note);
+        startActivityForResult(note_update_intent, REQUEST_CODE_UPDATE_NOTE);
     }
 
-    private void getNotes(int requestCode, boolean isNoteDeleted) {
+    private void getNotes(int requestCode, boolean delete_flag) {
 
         @SuppressLint("StaticFieldLeak")
         class GetNoteTask extends AsyncTask<Void, Void, List<Note>> {
@@ -99,23 +99,23 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
             }
 
             @Override
-            protected void onPostExecute(List<Note> notes) {
-                super.onPostExecute(notes);
+            protected void onPostExecute(List<Note> notes_list) {
+                super.onPostExecute(notes_list);
                 if(requestCode == REQUEST_CODE_ADD_NOTE) {
-                    noteList.add(0, notes.get(0));
+                    noteList.add(0, notes_list.get(0));
                     notesAdapter.notifyItemInserted(0);
                     notesRecyclerView.smoothScrollToPosition(0);
                 } else if(requestCode == REQUEST_CODE_UPDATE_NOTE) {
-                    noteList.remove(noteClickedPosition);
+                    noteList.remove(clicked_note_index);
 
-                    if (isNoteDeleted) {
-                        notesAdapter.notifyItemRemoved(noteClickedPosition);
+                    if (delete_flag) {
+                        notesAdapter.notifyItemRemoved(clicked_note_index);
                     } else {
-                        noteList.add(noteClickedPosition, notes.get(noteClickedPosition));
-                        notesAdapter.notifyItemChanged(noteClickedPosition);
+                        noteList.add(clicked_note_index, notes_list.get(clicked_note_index));
+                        notesAdapter.notifyItemChanged(clicked_note_index);
                     }
                 } else if(requestCode == REQUEST_CODE_SHOW_NOTES) {
-                    noteList.addAll(notes);
+                    noteList.addAll(notes_list);
                     notesAdapter.notifyDataSetChanged();
                 }
             }

@@ -41,7 +41,7 @@
         android:layout_marginEnd="@dimen/_8sdp"
         android:includeFontPadding="false"
         android:fontFamily="@font/ubuntu_regular"
-        android:text="@string/delete_note_confirmation"
+        android:text="Confirm delete?"
         android:textSize="@dimen/_12ssp"
         android:gravity="center_vertical"
         android:paddingStart="@dimen/_8sdp"

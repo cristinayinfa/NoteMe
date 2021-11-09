@@ -24,18 +24,18 @@
         android:text="Options"
         android:textColor="@color/black"
         android:textSize="@dimen/_15ssp" />
-    <!--wrap_content -->
+
     <LinearLayout
         android:id="@+id/layoutNoteColor"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_35sdp"
-        android:layout_margin="@dimen/_10sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_margin="@dimen/_12sdp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <FrameLayout
             android:layout_width="0dp"
-            android:layout_height="@dimen/_35sdp"
+            android:layout_height="@dimen/_40sdp"
             android:layout_weight="1">
 
             <View

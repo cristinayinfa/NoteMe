@@ -45,12 +45,12 @@ public class CreateNoteActivity extends AppCompatActivity {
     private EditText inputNoteTitle, inputNoteSubtitle, inputNoteText;
     private TextView textDateTime;
     private View viewSubtitleIndicator;
-    private ImageView imageNote;
+    private ImageView noteImage;
 
-    private AlertDialog dialogDeleteNote;
+    private AlertDialog delete_note_alert;
 
     private String selectedNoteColor;
-    private String selectedImagePath;
+    private String image_path;
 
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
@@ -67,7 +67,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         inputNoteSubtitle = findViewById(R.id.inputNoteSubtitle);
         inputNoteText = findViewById(R.id.inputNoteText);
         viewSubtitleIndicator = findViewById(R.id.viewSubtitleIndicator);
-        imageNote = findViewById(R.id.imageNote);
+        noteImage = findViewById(R.id.imageNote);
 
         textDateTime = findViewById(R.id.textDateTime);
         textDateTime.setText(new SimpleDateFormat(
@@ -78,7 +78,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         imageSave.setOnClickListener(v -> saveNote());
 
         selectedNoteColor = "#333333";
-        selectedImagePath = " ";
+        image_path = " ";
 
         if(getIntent().getBooleanExtra("isViewOrUpdate", false)) {
             alreadyAvailableNote = (Note) getIntent().getSerializableExtra("note");
@@ -96,9 +96,9 @@ public class CreateNoteActivity extends AppCompatActivity {
         textDateTime.setText(alreadyAvailableNote.getDateTime());
 
         if(alreadyAvailableNote.getImagePath() != null && !alreadyAvailableNote.getImagePath().trim().isEmpty()) {
-            imageNote.setImageBitmap(BitmapFactory.decodeFile(alreadyAvailableNote.getImagePath()));
-            imageNote.setVisibility(View.VISIBLE);
-            selectedImagePath = alreadyAvailableNote.getImagePath();
+            noteImage.setImageBitmap(BitmapFactory.decodeFile(alreadyAvailableNote.getImagePath()));
+            noteImage.setVisibility(View.VISIBLE);
+            image_path = alreadyAvailableNote.getImagePath();
         }
     }
 
@@ -119,7 +119,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         note.setNoteText(noteText);
         note.setDateTime(dateTimeStr);
         note.setColor(selectedNoteColor);
-        note.setImagePath(selectedImagePath);
+        note.setImagePath(image_path);
 
         if(alreadyAvailableNote != null) {
             note.setId(alreadyAvailableNote.getId());
@@ -270,22 +270,24 @@ public class CreateNoteActivity extends AppCompatActivity {
     }
 
     private void selectImage() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, REQUEST_CODE_SELECT_IMAGE);
+        Intent choose_image_intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(choose_image_intent, REQUEST_CODE_SELECT_IMAGE);
     }
 
+    // Method to show the delete alert
     private void showDeleteDialog() {
-        if(dialogDeleteNote == null) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(CreateNoteActivity.this);
+
+        if(delete_note_alert == null) {
+            AlertDialog.Builder delete_alert_builder = new AlertDialog.Builder(CreateNoteActivity.this);
             View view = LayoutInflater.from(this).inflate(
                     R.layout.layout_delete_note,
                     (ViewGroup) findViewById(R.id.layoutDeleteNoteContainer)
             );
-            builder.setView(view);
-            dialogDeleteNote = builder.create();
+            delete_alert_builder.setView(view);
+            delete_note_alert = delete_alert_builder.create();
 
-            if(dialogDeleteNote.getWindow() != null) {
-                dialogDeleteNote.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+            if(delete_note_alert.getWindow() != null) {
+                delete_note_alert.getWindow().setBackgroundDrawable(new ColorDrawable(0));
             }
 
             //delete button
@@ -304,9 +306,10 @@ public class CreateNoteActivity extends AppCompatActivity {
                         @Override
                         protected void onPostExecute(Void unused) {
                             super.onPostExecute(unused);
-                            Intent intent = new Intent();
-                            intent.putExtra("isNoteDeleted", true);
-                            setResult(RESULT_OK, intent);
+                            Intent intent_delete = new Intent();
+                            intent_delete.putExtra("isNoteDeleted", true);
+                            setResult(RESULT_OK, intent_delete);
+                            // Finish the activity
                             finish();
                         }
                     }
@@ -318,12 +321,13 @@ public class CreateNoteActivity extends AppCompatActivity {
             view.findViewById(R.id.textCancelDeleteNote).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    dialogDeleteNote.dismiss();
+
+                    delete_note_alert.dismiss();
                 }
             });
         }
 
-        dialogDeleteNote.show();
+        delete_note_alert.show();
     }
 
     @Override
@@ -332,8 +336,8 @@ public class CreateNoteActivity extends AppCompatActivity {
         if(requestCode == REQUEST_CODE_STORAGE_PERMISSION && grantResults.length > 0){
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 selectImage();
-            } else{
-                Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Error: Permission Denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -341,21 +345,21 @@ public class CreateNoteActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_CODE_SELECT_IMAGE && resultCode == RESULT_OK){
+        if(resultCode == RESULT_OK && requestCode == REQUEST_CODE_SELECT_IMAGE) {
             if(data != null){
                 Uri selectedImageUri = data.getData();
                 if(selectedImageUri != null){
                     try{
-                        InputStream inputStream = getContentResolver().openInputStream(selectedImageUri);
-                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                        imageNote.setImageBitmap(bitmap);
-                        imageNote.setVisibility(View.VISIBLE);
+                        InputStream is = getContentResolver().openInputStream(selectedImageUri);
+                        Bitmap bitmap = BitmapFactory.decodeStream(is);
+                        noteImage.setImageBitmap(bitmap);
+                        noteImage.setVisibility(View.VISIBLE);
 
-                        selectedImagePath = getPathFromUri(selectedImageUri);
+                        image_path = getPathFromUri(selectedImageUri);
 
 
-                    } catch (Exception e){
-                        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    } catch (Exception exception){
+                        Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -363,16 +367,16 @@ public class CreateNoteActivity extends AppCompatActivity {
     }
 
     private String getPathFromUri(Uri contentUri){
-        String filePath;
+        String path;
         Cursor cursor = getContentResolver().query(contentUri, null, null, null, null);
         if(cursor == null){
-            filePath = contentUri.getPath();
+            path = contentUri.getPath();
         } else{
             cursor.moveToFirst();
             int index = cursor.getColumnIndex("_data");
-            filePath = cursor.getString(index);
+            path = cursor.getString(index);
             cursor.close();
         }
-        return filePath;
+        return path;
     }
 }
