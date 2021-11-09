@@ -22,7 +22,6 @@ import com.uoit.noteme.listeners.NotesListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -82,7 +81,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             textDateTime = itemView.findViewById(R.id.textDateTime);
             textNote = itemView.findViewById(R.id.textNote);
             layoutNote = itemView.findViewById(R.id.layoutNote);
-            imageNote = itemView.findViewById(R.id.imageNote);
+            imageNote = itemView.findViewById(R.id.image);
 
         }
 

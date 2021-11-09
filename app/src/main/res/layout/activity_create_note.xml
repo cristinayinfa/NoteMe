@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:context=".activites.CreateNoteActivity">
+    tools:context=".activites.NewNoteActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -112,7 +112,7 @@
                 app:layout_constraintTop_toTopOf="@id/inputNoteSubtitle" />
 
             <ImageView
-                android:id="@+id/imageNote"
+                android:id="@+id/image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_12sdp"
@@ -142,7 +142,7 @@
                 android:textColorHint="@color/colorTextHint"
                 android:textSize="@dimen/_13ssp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/imageNote" />
+                app:layout_constraintTop_toBottomOf="@id/image" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

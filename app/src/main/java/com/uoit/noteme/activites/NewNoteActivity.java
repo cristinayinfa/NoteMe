@@ -40,19 +40,19 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class CreateNoteActivity extends AppCompatActivity {
+public class NewNoteActivity extends AppCompatActivity {
     private Note alreadyAvailableNote;
     private EditText inputNoteTitle, inputNoteSubtitle, inputNoteText;
     private TextView textDateTime;
     private View viewSubtitleIndicator;
-    private ImageView imageNote;
+    private ImageView image;
 
     private AlertDialog dialogDeleteNote;
 
     private String selectedNoteColor;
-    private String selectedImagePath;
+    private String ImagePath;
 
-    private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
+    private static final int REQUEST_CODE_PERMISSION = 1;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
 
     @Override
@@ -67,7 +67,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         inputNoteSubtitle = findViewById(R.id.inputNoteSubtitle);
         inputNoteText = findViewById(R.id.inputNoteText);
         viewSubtitleIndicator = findViewById(R.id.viewSubtitleIndicator);
-        imageNote = findViewById(R.id.imageNote);
+        image = findViewById(R.id.image);
 
         textDateTime = findViewById(R.id.textDateTime);
         textDateTime.setText(new SimpleDateFormat(
@@ -78,7 +78,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         imageSave.setOnClickListener(v -> saveNote());
 
         selectedNoteColor = "#333333";
-        selectedImagePath = " ";
+        ImagePath = " ";
 
         if(getIntent().getBooleanExtra("isViewOrUpdate", false)) {
             alreadyAvailableNote = (Note) getIntent().getSerializableExtra("note");
@@ -96,9 +96,9 @@ public class CreateNoteActivity extends AppCompatActivity {
         textDateTime.setText(alreadyAvailableNote.getDateTime());
 
         if(alreadyAvailableNote.getImagePath() != null && !alreadyAvailableNote.getImagePath().trim().isEmpty()) {
-            imageNote.setImageBitmap(BitmapFactory.decodeFile(alreadyAvailableNote.getImagePath()));
-            imageNote.setVisibility(View.VISIBLE);
-            selectedImagePath = alreadyAvailableNote.getImagePath();
+            image.setImageBitmap(BitmapFactory.decodeFile(alreadyAvailableNote.getImagePath()));
+            image.setVisibility(View.VISIBLE);
+            ImagePath = alreadyAvailableNote.getImagePath();
         }
     }
 
@@ -119,7 +119,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         note.setNoteText(noteText);
         note.setDateTime(dateTimeStr);
         note.setColor(selectedNoteColor);
-        note.setImagePath(selectedImagePath);
+        note.setImagePath(ImagePath);
 
         if(alreadyAvailableNote != null) {
             note.setId(alreadyAvailableNote.getId());
@@ -136,8 +136,8 @@ public class CreateNoteActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                Intent intent = new Intent();
-                setResult(RESULT_OK, intent);
+                Intent PostExecuteIntent = new Intent();
+                setResult(RESULT_OK, PostExecuteIntent);
                 finish();
             }
         }
@@ -243,8 +243,8 @@ public class CreateNoteActivity extends AppCompatActivity {
                         getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE
                 )!= PackageManager.PERMISSION_GRANTED){
                     ActivityCompat.requestPermissions(
-                            CreateNoteActivity.this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
-                            REQUEST_CODE_STORAGE_PERMISSION
+                            NewNoteActivity.this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
+                            REQUEST_CODE_PERMISSION
                     );
                 } else {
                     selectImage();
@@ -258,7 +258,7 @@ public class CreateNoteActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                    showDeleteDialog();
+                    showDelete();
                 }
             });
         }
@@ -269,14 +269,16 @@ public class CreateNoteActivity extends AppCompatActivity {
         gradientDrawable.setColor(Color.parseColor(selectedNoteColor));
     }
 
+    // intent to redirect to image selection
     private void selectImage() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, REQUEST_CODE_SELECT_IMAGE);
+        Intent imgIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(imgIntent, REQUEST_CODE_SELECT_IMAGE);
     }
 
-    private void showDeleteDialog() {
+    // Show delete button only when a note already exists
+    private void showDelete() {
         if(dialogDeleteNote == null) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(CreateNoteActivity.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(NewNoteActivity.this);
             View view = LayoutInflater.from(this).inflate(
                     R.layout.layout_delete_note,
                     (ViewGroup) findViewById(R.id.layoutDeleteNoteContainer)
@@ -304,9 +306,9 @@ public class CreateNoteActivity extends AppCompatActivity {
                         @Override
                         protected void onPostExecute(Void unused) {
                             super.onPostExecute(unused);
-                            Intent intent = new Intent();
-                            intent.putExtra("isNoteDeleted", true);
-                            setResult(RESULT_OK, intent);
+                            Intent PostExecuteIntent = new Intent();
+                            PostExecuteIntent.putExtra("isNoteDeleted", true);
+                            setResult(RESULT_OK, PostExecuteIntent);
                             finish();
                         }
                     }
@@ -329,7 +331,7 @@ public class CreateNoteActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == REQUEST_CODE_STORAGE_PERMISSION && grantResults.length > 0){
+        if(requestCode == REQUEST_CODE_PERMISSION && grantResults.length > 0){
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 selectImage();
             } else{
@@ -338,6 +340,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         }
     }
 
+    //Display image
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -346,12 +349,12 @@ public class CreateNoteActivity extends AppCompatActivity {
                 Uri selectedImageUri = data.getData();
                 if(selectedImageUri != null){
                     try{
-                        InputStream inputStream = getContentResolver().openInputStream(selectedImageUri);
-                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                        imageNote.setImageBitmap(bitmap);
-                        imageNote.setVisibility(View.VISIBLE);
+                        InputStream is = getContentResolver().openInputStream(selectedImageUri);
+                        Bitmap bitmap = BitmapFactory.decodeStream(is);
+                        image.setImageBitmap(bitmap);
+                        image.setVisibility(View.VISIBLE);
 
-                        selectedImagePath = getPathFromUri(selectedImageUri);
+                        ImagePath = getPathFromUri(selectedImageUri);
 
 
                     } catch (Exception e){
@@ -362,6 +365,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         }
     }
 
+    // Get path of image selected
     private String getPathFromUri(Uri contentUri){
         String filePath;
         Cursor cursor = getContentResolver().query(contentUri, null, null, null, null);

@@ -16,7 +16,7 @@
         tools:targetApi="q">
 
         <activity
-            android:name="com.uoit.noteme.activites.CreateNoteActivity"
+            android:name="com.uoit.noteme.activites.NewNoteActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity

@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -44,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
 
         ImageView imageAddNoteMain = findViewById(R.id.imageAddNoteMain);
         imageAddNoteMain.setOnClickListener(v -> startActivityForResult(new Intent(
-                getApplicationContext(), CreateNoteActivity.class), REQUEST_CODE_ADD_NOTE)
+                getApplicationContext(), NewNoteActivity.class), REQUEST_CODE_ADD_NOTE)
         );
 
         notesRecyclerView = findViewById(R.id.notesRecyclerView);
@@ -81,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
     @Override
     public void onNoteClicked(Note note, int position) {
         noteClickedPosition = position;
-        Intent intent = new Intent(getApplicationContext(), CreateNoteActivity.class);
+        Intent intent = new Intent(getApplicationContext(), NewNoteActivity.class);
         intent.putExtra("isViewOrUpdate", true);
         intent.putExtra("note", note);
         startActivityForResult(intent, REQUEST_CODE_UPDATE_NOTE);
