@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
     private List<Note> noteList;
     private NotesAdapter notesAdapter;
 
-    private int noteClickedPosition = -1;
+    private int NoteClickedIndex = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,11 +79,11 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
 
     @Override
     public void onNoteClicked(Note note, int position) {
-        noteClickedPosition = position;
-        Intent intent = new Intent(getApplicationContext(), NewNoteActivity.class);
-        intent.putExtra("isViewOrUpdate", true);
-        intent.putExtra("note", note);
-        startActivityForResult(intent, REQUEST_CODE_UPDATE_NOTE);
+        NoteClickedIndex = position;
+        Intent UpdateNoteIntent = new Intent(getApplicationContext(), NewNoteActivity.class);
+        UpdateNoteIntent.putExtra("isViewOrUpdate", true);
+        UpdateNoteIntent.putExtra("note", note);
+        startActivityForResult(UpdateNoteIntent, REQUEST_CODE_UPDATE_NOTE);
     }
 
     private void getNotes(int requestCode, boolean isNoteDeleted) {
@@ -98,23 +98,23 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
             }
 
             @Override
-            protected void onPostExecute(List<Note> notes) {
-                super.onPostExecute(notes);
+            protected void onPostExecute(List<Note> note_list) {
+                super.onPostExecute(note_list);
                 if(requestCode == REQUEST_CODE_ADD_NOTE) {
-                    noteList.add(0, notes.get(0));
+                    noteList.add(0, note_list.get(0));
                     notesAdapter.notifyItemInserted(0);
                     notesRecyclerView.smoothScrollToPosition(0);
                 } else if(requestCode == REQUEST_CODE_UPDATE_NOTE) {
-                    noteList.remove(noteClickedPosition);
+                    noteList.remove(NoteClickedIndex);
 
                     if (isNoteDeleted) {
-                        notesAdapter.notifyItemRemoved(noteClickedPosition);
+                        notesAdapter.notifyItemRemoved(NoteClickedIndex);
                     } else {
-                        noteList.add(noteClickedPosition, notes.get(noteClickedPosition));
-                        notesAdapter.notifyItemChanged(noteClickedPosition);
+                        noteList.add(NoteClickedIndex, note_list.get(NoteClickedIndex));
+                        notesAdapter.notifyItemChanged(NoteClickedIndex);
                     }
                 } else if(requestCode == REQUEST_CODE_SHOW_NOTES) {
-                    noteList.addAll(notes);
+                    noteList.addAll(note_list);
                     notesAdapter.notifyDataSetChanged();
                 }
             }

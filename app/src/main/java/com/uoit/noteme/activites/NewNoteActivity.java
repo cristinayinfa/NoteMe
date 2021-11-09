@@ -47,7 +47,7 @@ public class NewNoteActivity extends AppCompatActivity {
     private View viewSubtitleIndicator;
     private ImageView image;
 
-    private AlertDialog dialogDeleteNote;
+    private AlertDialog DeleteNoteAlert;
 
     private String selectedNoteColor;
     private String ImagePath;
@@ -277,17 +277,17 @@ public class NewNoteActivity extends AppCompatActivity {
 
     // Show delete button only when a note already exists
     private void showDelete() {
-        if(dialogDeleteNote == null) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(NewNoteActivity.this);
+        if(DeleteNoteAlert == null) {
+            AlertDialog.Builder DeleteAlertBuilder = new AlertDialog.Builder(NewNoteActivity.this);
             View view = LayoutInflater.from(this).inflate(
                     R.layout.layout_delete_note,
                     (ViewGroup) findViewById(R.id.layoutDeleteNoteContainer)
             );
-            builder.setView(view);
-            dialogDeleteNote = builder.create();
+            DeleteAlertBuilder.setView(view);
+            DeleteNoteAlert = DeleteAlertBuilder.create();
 
-            if(dialogDeleteNote.getWindow() != null) {
-                dialogDeleteNote.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+            if(DeleteNoteAlert.getWindow() != null) {
+                DeleteNoteAlert.getWindow().setBackgroundDrawable(new ColorDrawable(0));
             }
 
             //delete button
@@ -306,9 +306,9 @@ public class NewNoteActivity extends AppCompatActivity {
                         @Override
                         protected void onPostExecute(Void unused) {
                             super.onPostExecute(unused);
-                            Intent PostExecuteIntent = new Intent();
-                            PostExecuteIntent.putExtra("isNoteDeleted", true);
-                            setResult(RESULT_OK, PostExecuteIntent);
+                            Intent DeleteIntent = new Intent();
+                            DeleteIntent.putExtra("isNoteDeleted", true);
+                            setResult(RESULT_OK, DeleteIntent);
                             finish();
                         }
                     }
@@ -320,12 +320,12 @@ public class NewNoteActivity extends AppCompatActivity {
             view.findViewById(R.id.textCancelDeleteNote).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    dialogDeleteNote.dismiss();
+                    DeleteNoteAlert.dismiss();
                 }
             });
         }
 
-        dialogDeleteNote.show();
+        DeleteNoteAlert.show();
     }
 
     @Override
@@ -335,7 +335,7 @@ public class NewNoteActivity extends AppCompatActivity {
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 selectImage();
             } else{
-                Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Error: Permission Denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -367,16 +367,16 @@ public class NewNoteActivity extends AppCompatActivity {
 
     // Get path of image selected
     private String getPathFromUri(Uri contentUri){
-        String filePath;
+        String path;
         Cursor cursor = getContentResolver().query(contentUri, null, null, null, null);
         if(cursor == null){
-            filePath = contentUri.getPath();
+            path = contentUri.getPath();
         } else{
             cursor.moveToFirst();
             int index = cursor.getColumnIndex("_data");
-            filePath = cursor.getString(index);
+            path = cursor.getString(index);
             cursor.close();
         }
-        return filePath;
+        return path;
     }
 }
