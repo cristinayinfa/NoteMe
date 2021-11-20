@@ -1,11 +1,14 @@
 package com.uoit.noteme.activites;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -20,6 +23,15 @@ import com.uoit.noteme.database.NotesDatabase;
 import com.uoit.noteme.entities.Note;
 import com.uoit.noteme.listeners.NotesListener;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -121,6 +133,57 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
         }
 
         new GetNoteTask().execute();
+    }
+
+    // Method to export a JSON file
+    public void export_json(View v) {
+
+        System.out.println("Export JSON Method called");
+
+        JSONObject export_object = new JSONObject(); // Object for the file
+        JSONArray notes_array = new JSONArray(); // Array to store individual note objects
+
+        // loop through the list of all notes
+        for (Note note_object: noteList) {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("title", note_object.getTitle().toString());
+                jsonObject.put("subtitle", note_object.getSubtitle().toString());
+                jsonObject.put("text", note_object.getNoteText().toString());
+                jsonObject.put("image path", note_object.getImagePath().toString());
+                notes_array.put(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            System.out.println(note_object.toString());
+        }
+
+        // Once everything has been added to the notes_array JSON array, add it to the object
+        try {
+            export_object.put("Notes", notes_array);
+            System.out.println("Main object added to the export");
+            System.out.println(export_object.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Save the object to file
+        try {
+            FileOutputStream fos = openFileOutput("Notes.json", Context.MODE_PRIVATE);
+            System.out.println("JSON file created");
+            try {
+                fos.write(export_object.toString().getBytes(StandardCharsets.UTF_8));
+                System.out.println("JSON written to file");
+
+            } catch (Exception e) {
+                System.out.println("Could not create JSON file");
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            System.out.println("Could not create JSON file");
+            e.printStackTrace();
+        }
     }
 
     @Override

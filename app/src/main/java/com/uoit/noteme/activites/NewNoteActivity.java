@@ -2,6 +2,7 @@ package com.uoit.noteme.activites;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -35,10 +36,12 @@ import com.uoit.noteme.R;
 import com.uoit.noteme.database.NotesDatabase;
 import com.uoit.noteme.entities.Note;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Vector;
 
 public class NewNoteActivity extends AppCompatActivity {
     private Note alreadyAvailableNote;
@@ -54,6 +57,7 @@ public class NewNoteActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_PERMISSION = 1;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
+    private static final int picture_id = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -235,6 +239,7 @@ public class NewNoteActivity extends AppCompatActivity {
             setSubtitleIndicatorColor();
         });
 
+        // This is the onclick method for the add image layout
         layoutMiscellaneous.findViewById(R.id.layoutAddImage).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -249,6 +254,16 @@ public class NewNoteActivity extends AppCompatActivity {
                 } else {
                     selectImage();
                 }
+            }
+        });
+
+        // OnClick method for adding an image through camera
+        layoutMiscellaneous.findViewById(R.id.add_image_camera).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("Add Image through camera button clicked from NewNoteActivity");
+                Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(camera_intent, picture_id);
             }
         });
 
@@ -363,6 +378,26 @@ public class NewNoteActivity extends AppCompatActivity {
                 }
             }
         }
+        if (requestCode == picture_id) {
+            System.out.println("This should be a camera image");
+            Bitmap camera_capture = (Bitmap) data.getExtras().get("data");
+            image.setImageBitmap(camera_capture);
+            image.setVisibility(View.VISIBLE);
+
+            // Get the path for the image
+            Uri selectedImageUri = getImageUri(getApplicationContext(), camera_capture);
+            ImagePath = getPathFromUri(selectedImageUri);
+            System.out.println(ImagePath);
+            System.out.println("Camera capture image set as note image");
+        }
+    }
+
+    // Get image uri
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
 
     // Get path of image selected
