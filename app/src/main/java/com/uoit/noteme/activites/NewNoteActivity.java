@@ -388,7 +388,7 @@ public class NewNoteActivity extends AppCompatActivity {
             Uri selectedImageUri = getImageUri(getApplicationContext(), camera_capture);
             ImagePath = getPathFromUri(selectedImageUri);
             System.out.println(ImagePath);
-            System.out.println("Camera capture image set as note image");
+            
         }
     }
 
