@@ -378,8 +378,6 @@ public class NewNoteActivity extends AppCompatActivity {
                         image.setVisibility(View.VISIBLE);
 
                         ImagePath = getPathFromUri(selectedImageUri);
-
-
                     } catch (Exception e){
                         Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }

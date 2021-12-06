@@ -37,9 +37,9 @@ public class CanvasDrawActivity extends AppCompatActivity {
         System.out.println("Save canvas image button clicked");
         Bitmap flowchart = screenShot(findViewById(R.id.canvas_draw_view));
         MediaStore.Images.Media.insertImage(getContentResolver(), flowchart, "NoteImage", null);
-        Intent back_new_note = new Intent(getApplicationContext(), NewNoteActivity.class);
-        startActivity(back_new_note);
-
+//        Intent back_new_note = new Intent(getApplicationContext(), NewNoteActivity.class);
+//        startActivity(back_new_note);
+        finish();
     }
 
     public Bitmap screenShot(View view) {
