@@ -261,12 +261,20 @@ public class NewNoteActivity extends AppCompatActivity {
         layoutMiscellaneous.findViewById(R.id.add_image_camera).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("Add Image through camera button clicked from NewNoteActivity");
+                System.out.println("Add Image through camera button clicked from New Note Activity");
                 Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(camera_intent, picture_id);
             }
         });
 
+        layoutMiscellaneous.findViewById(R.id.draw_canvas_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("Add drawing from Canvas button clicked from New Note Activity");
+                Intent canvas_intent = new Intent(getApplicationContext(), CanvasDrawActivity.class);
+                startActivity(canvas_intent);
+            }
+        });
         if(alreadyAvailableNote != null) {
             layoutMiscellaneous.findViewById(R.id.layoutDeleteNote).setVisibility(View.VISIBLE);
             layoutMiscellaneous.findViewById(R.id.layoutDeleteNote).setOnClickListener(new View.OnClickListener() {
@@ -406,7 +414,7 @@ public class NewNoteActivity extends AppCompatActivity {
         Cursor cursor = getContentResolver().query(contentUri, null, null, null, null);
         if(cursor == null){
             path = contentUri.getPath();
-        } else{
+        } else {
             cursor.moveToFirst();
             int index = cursor.getColumnIndex("_data");
             path = cursor.getString(index);

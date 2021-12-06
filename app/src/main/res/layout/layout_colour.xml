@@ -208,4 +208,14 @@
         android:layout_marginTop="5dp"
         android:id="@+id/add_image_camera"
         />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Draw Note on Canvas"
+        android:backgroundTint="@color/black"
+        android:layout_marginTop="5dp"
+        android:id="@+id/draw_canvas_button"
+        />
+
 </LinearLayout>

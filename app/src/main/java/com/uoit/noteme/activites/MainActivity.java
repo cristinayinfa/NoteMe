@@ -131,7 +131,6 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
                 }
             }
         }
-
         new GetNoteTask().execute();
     }
 
