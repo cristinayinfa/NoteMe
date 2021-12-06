@@ -1,7 +1,7 @@
 package com.uoit.noteme.activites;
 
-import android.app.ActionBar;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -9,23 +9,29 @@ import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 
 public class CanvasDraw extends View {
-
-    public ViewGroup.LayoutParams params;
+    private Bitmap bmp;
+    private Canvas cvs;
+    private int colour = Color.BLACK;
+    private float strokeWidth = 8f;
     private Path path = new Path();
     private Paint brush = new Paint();
+    private Paint bBrush = new Paint(Paint.DITHER_FLAG);
 
     public CanvasDraw(Context context, AttributeSet attrs) {
         super(context, attrs);
         brush.setAntiAlias(true);
-        brush.setColor(Color.BLACK);
+        brush.setColor(colour);
         brush.setStyle(Paint.Style.STROKE);
         brush.setStrokeJoin(Paint.Join.ROUND);
-        brush.setStrokeWidth(8f);
-        params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
+        brush.setStrokeWidth(strokeWidth);
+        brush.setAlpha(0xff);
+    }
 
+    public void init(int height, int width) {
+        bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        cvs = new Canvas(bmp);
     }
 
     @Override
@@ -50,6 +56,19 @@ public class CanvasDraw extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawPath(path, brush);
+        super.onDraw(canvas);
+        canvas.save();
+        cvs.drawColor(Color.WHITE);
+
+        brush.setColor(colour);
+        brush.setStrokeWidth(strokeWidth);
+        cvs.drawPath(path, brush);
+
+        canvas.drawBitmap(bmp, 0, 0, bBrush);
+        canvas.restore();
+    }
+
+    public Bitmap save() {
+        return bmp;
     }
 }

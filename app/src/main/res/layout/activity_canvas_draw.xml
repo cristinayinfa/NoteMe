@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activites.CanvasDrawActivity"
-    xmlns:custom="http://schemas.android.com/apk/res/com.uoit.noteme.activites"
     >
 
     <com.uoit.noteme.activites.CanvasDraw
@@ -13,19 +11,18 @@
         android:layout_height="600dp"
         android:layout_above="@+id/save_image_button"
         android:layout_marginBottom="10dp"
+        android:layout_centerInParent="true"
         android:id="@+id/canvas_draw_view"
         />
 
     <Button
+        android:id="@+id/save_image_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="save_image"
-        android:text="Save Image and go back"
-        android:id="@+id/save_image_button"
-        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:backgroundTint="@color/black"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
-        />
+        android:backgroundTint="@color/black"
+        android:text="Save Image and go back" />
 
 </RelativeLayout>

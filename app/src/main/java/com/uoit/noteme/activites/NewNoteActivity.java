@@ -57,6 +57,7 @@ public class NewNoteActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_PERMISSION = 1;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
+    private static final int REQUEST_CODE_FLOWCHART = 3;
     private static final int picture_id = 123;
 
     @Override
@@ -272,7 +273,7 @@ public class NewNoteActivity extends AppCompatActivity {
             public void onClick(View view) {
                 System.out.println("Add drawing from Canvas button clicked from New Note Activity");
                 Intent canvas_intent = new Intent(getApplicationContext(), CanvasDrawActivity.class);
-                startActivity(canvas_intent);
+                startActivityForResult(canvas_intent, REQUEST_CODE_FLOWCHART);
             }
         });
         if(alreadyAvailableNote != null) {
@@ -384,6 +385,24 @@ public class NewNoteActivity extends AppCompatActivity {
                 }
             }
         }
+        if(requestCode == REQUEST_CODE_FLOWCHART && resultCode == RESULT_OK){
+            if(data != null){
+                try{
+                    System.out.println("This should be a flowchart image");
+                    byte[] flowchart = (byte[]) data.getExtras().get("flowchart");
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(flowchart, 0, flowchart.length);
+                    image.setImageBitmap(bitmap);
+                    image.setVisibility(View.VISIBLE);
+
+                    // Get the path for the image
+                    Uri selectedImageUri = getImageUri(getApplicationContext(), bitmap);
+                    ImagePath = getPathFromUri(selectedImageUri);
+                    System.out.println(ImagePath);
+                } catch (Exception e){
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
         if (requestCode == picture_id) {
             System.out.println("This should be a camera image");
             Bitmap camera_capture = (Bitmap) data.getExtras().get("data");
@@ -394,7 +413,6 @@ public class NewNoteActivity extends AppCompatActivity {
             Uri selectedImageUri = getImageUri(getApplicationContext(), camera_capture);
             ImagePath = getPathFromUri(selectedImageUri);
             System.out.println(ImagePath);
-            
         }
     }
 
