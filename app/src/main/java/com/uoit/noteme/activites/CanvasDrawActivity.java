@@ -1,11 +1,15 @@
 package com.uoit.noteme.activites;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -27,6 +31,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.uoit.noteme.R;
 
 import java.io.ByteArrayInputStream;
@@ -37,7 +42,7 @@ import java.util.UUID;
 
 public class CanvasDrawActivity extends AppCompatActivity {
     CanvasDraw canvasDraw;
-    Button saveBtn;
+    Button saveBtn, rectBtn, ovalBtn, dmdBtn, lineBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +72,43 @@ public class CanvasDrawActivity extends AppCompatActivity {
                 int width = canvasDraw.getMeasuredWidth();
                 int height = canvasDraw.getMeasuredHeight();
                 canvasDraw.init(height, width);
+            }
+        });
+
+        initOptionDrawer();
+    }
+
+    public void initOptionDrawer() {
+        lineBtn = (Button) findViewById(R.id.draw_line);
+        dmdBtn = (Button) findViewById(R.id.draw_diamond);
+        ovalBtn = (Button) findViewById(R.id.draw_oval);
+        rectBtn = (Button) findViewById(R.id.draw_rectangle);
+
+        lineBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        dmdBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        ovalBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        rectBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }

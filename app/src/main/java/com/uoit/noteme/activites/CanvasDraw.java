@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,6 +19,10 @@ public class CanvasDraw extends View {
     private Path path = new Path();
     private Paint brush = new Paint();
     private Paint bBrush = new Paint(Paint.DITHER_FLAG);
+
+    float X, Y;
+
+    public Rect rect;
 
     public CanvasDraw(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -41,6 +46,8 @@ public class CanvasDraw extends View {
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                X = pointX;
+                Y = pointY;
                 path.moveTo(pointX, pointY);
                 return true;
             case MotionEvent.ACTION_MOVE:
@@ -71,4 +78,10 @@ public class CanvasDraw extends View {
     public Bitmap save() {
         return bmp;
     }
+
+    public void drawRectangle(){
+        rect = new Rect();
+    }
+
+
 }
